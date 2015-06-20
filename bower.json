@@ -1,0 +1,21 @@
+{
+  "name": "photo-joe",
+  "main": "index.js",
+  "version": "0.0.1a",
+  "homepage": "https://github.com/asonnenschein/photo-joe",
+  "authors": [
+    "asonnenschein <adrian.sonnenschein@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "pure": "0.6.0",
+    "react": "0.13.3"
+  }
+}

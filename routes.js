@@ -18,35 +18,7 @@ module.exports = function (db) {
       ;
     },
 
-    getUserPreferences: function (req, res, next) {
-      new db.UsersPreferences({ users_id: req.user.id }).fetch()
-        .then(function (data) {
-          if (!data) return res.status(404).send("User does not exist!");
-          else return res.status(200).send(data);
-        })
-        .catch(function (error) {
-          return res.status(500).send("Internal server error!");
-        })
-      ;
-    },
-
     getUserSubmissions: function (req, res, next) {
-
-    },
-
-    getUserComments: function (req, res, next) {
-
-    },
-
-    getUserLikes: function (req, res, next) {
-
-    },
-
-    getUserDislikes: function (req, res, next) {
-
-    },
-
-    getUserSaves: function (req, res, next) {
 
     },
 
@@ -65,29 +37,6 @@ module.exports = function (db) {
             })
             .catch(function (error) {
               return res.status(400).send("Could not update user!");
-            })
-          ;
-
-        })
-        .catch(function (error) {
-          return res.status(500).send("Internal server error!");
-        })
-      ;
-    },
-
-    updateUserPreferences: function (req, res, next) {
-      new db.UsersPreferences({ users_id: req.user.id }).fetch()
-        .then(function (data) {
-          if (!data) {
-            return res.status(400).send("Could not update preferences!");
-          }
-
-          data.save(req.body, { method: 'update' })
-            .then(function (update) {
-              return res.status(200).send(update);
-            })
-            .catch(function (error) {
-              return res.status(400).send("Could not update preferences!");
             })
           ;
 

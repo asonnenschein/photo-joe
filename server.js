@@ -82,41 +82,10 @@ server.get('/users/:username/',
   }, routes.getUser)
 ;
 
-server.get('/users/:username/preferences/',
-  checkAuthorization,
-  function (req, res, next) {
-    return next();
-  }, routes.getUserPreferences)
-;
-
 server.get('/users/:username/submissions/',
   function (req, res, next) {
     return next();
   }, routes.getUserSubmissions)
-;
-
-server.get('/users/:username/comments/',
-  function (req, res, next) {
-    return next();
-  }, routes.getUserComments)
-;
-
-server.get('/users/:username/likes/',
-  function (req, res, next) {
-    return next();
-  }, routes.getUserLikes)
-;
-
-server.get('/users/:username/dislikes/',
-  function (req, res, next) {
-    return next();
-  }, routes.getUserDislikes)
-;
-
-server.get('/users/:username/saves/',
-  function (req, res, next) {
-    return next();
-  }, routes.getUserSaves)
 ;
 
 server.post('/users/',
@@ -131,13 +100,6 @@ server.put('/users/:username/',
   function (req, res, next) {
     return next();
   }, routes.updateUser)
-;
-
-server.put('/users/:username/preferences/',
-  checkAuthorization,
-  function (req, res, next) {
-    return next();
-  }, routes.updateUserPreferences)
 ;
 
 server.delete('/users/:username/',
@@ -222,25 +184,6 @@ server.delete('/submissions/:submission/:file/',
   function (req, res, next) {
     return next();
   }, routes.deleteSubmissionsFile)
-;
-
-// Tags Routes =================================================================
-server.get('/tags/',
-  function (req, res, next) {
-    return next();
-  }, routes.getTags)
-;
-
-server.post('/tags/',
-  function (req, res, next) {
-    return next();
-  }, routes.createTags)
-;
-
-server.delete('/tags/',
-  function (req, res, next) {
-    return next();
-  }, routes.deleteTags)
 ;
 
 module.exports = function (callback) { callback(server); };

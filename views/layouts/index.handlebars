@@ -3,10 +3,22 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Joseph Sonnenschein Photography</title>
+    <link rel="stylesheet" href="/assets/pure/pure-min.css">
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="/assets/pure/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="/assets/pure/grids-responsive-min.css">
+    <!--<![endif]-->
+    <link rel="stylesheet" href="/css/base.css">
 </head>
 <body>
+    <div id="header"></div>
     {{{ body }}}
+    <script src="/assets/react/react.js"></script>
+    <script src="/assets/react/JSXTransformer.js"></script>
+    <script type="text/jsx" src="/js/header.js"></script>
 </body>
 </html>
