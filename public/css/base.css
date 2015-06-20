@@ -4,10 +4,17 @@
     -webkit-font-smoothing: antialiased;
     height: 2.1em;
     overflow: hidden;
+    font-size: 14px;
     -webkit-transition: height 0.5s;
     -moz-transition: height 0.5s;
     -ms-transition: height 0.5s;
     transition: height 0.5s;
+}
+
+.content-container {
+    max-width: 975px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .custom-wrapper.open {
@@ -68,6 +75,12 @@
 
     .custom-menu-3 {
         text-align: left;
+    }
+
+    .content-container {
+        max-width: inherit;
+        margin-left: inherit;
+        margin-right: inherit;
     }
 
     .custom-toggle {
