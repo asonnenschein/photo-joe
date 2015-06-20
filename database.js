@@ -1,5 +1,5 @@
 var bcrypt = require('bcrypt-nodejs')
-  , config = require('../config.json')
+  , config = require('./config.json')
   , knex = require('knex')(config.db)
   , bookshelf = require('bookshelf')(knex)
   , Users

@@ -1,10 +1,11 @@
 var express = require('express')
+  , handlebars = require('express-handlebars')
   , cookieParser = require('cookie-parser')
   , session = require('express-session')
   , bodyParser = require('body-parser')
   , passport = require('passport')
   , multer = require('multer')
-  , config = require('./../config.json')
+  , config = require('./config.json')
   , database = require('./database')
   , routes = require('./routes')(database)
   , server = express();
@@ -29,10 +30,34 @@ server.use(passport.session());
 
 server.enable('trust proxy');
 
+server.engine('handlebars', handlebars({ defaultLayout: 'index' }));
+server.set('view engine', 'handlebars');
+
 function checkAuthorization (req, res, next) {
   if (req.isAuthenticated && req.user.id) return next();
   else res.status(401).send("Unauthorized request!");
 }
+
+// Public Routes ===============================================================
+server.use(express.static(__dirname + '/public/'));
+
+server.get('/',
+  function (req, res) {
+    res.render('home');
+  })
+;
+
+server.get('/galleries',
+  function (req, res) {
+    res.render('galleries');
+  })
+;
+
+server.get('/about',
+  function (req, res) {
+    res.render('about');
+  })
+;
 
 // Login & Logout Routes =======================================================
 server.post('/users/login/',

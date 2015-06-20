@@ -12,7 +12,7 @@ describe('SlippyNode Image Server REST API Tests', function () {
     exec(cmd, function (error, stdout, stderr) {
       if (error) throw error;
       if (stderr) throw stderr;
-      require('../lib/server')(function (server) {
+      require('../server')(function (server) {
         server = server;
         agent = supertest.agent(server);
         done();
