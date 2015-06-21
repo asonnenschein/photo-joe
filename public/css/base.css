@@ -1,11 +1,15 @@
 /* BASE ===================================================================== */
+
 .content-container {
     max-width: 975px;
     margin-left: auto;
     margin-right: auto;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 /* INDEX ==================================================================== */
+
 .custom-wrapper {
     background-color: #ffd390;
     margin-bottom: 1em;
@@ -73,6 +77,10 @@
     transform: rotate(-45deg);
 }
 
+.pure-menu-heading {
+    padding-left: 0em;
+}
+
 @media (max-width: 47.999em) {
 
     .custom-menu-3 {
@@ -83,6 +91,8 @@
         max-width: inherit;
         margin-left: inherit;
         margin-right: inherit;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     .custom-toggle {
@@ -91,7 +101,33 @@
 
 }
 
+/* HOME ===================================================================== */
+
+.normalize-image {
+    padding-bottom: 10px;
+}
+
+.header {
+    font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    max-width: 975px;
+    margin: 0 auto;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+    letter-spacing: 0.05em;
+    margin-bottom: 29px;
+}
+
+.header h1 {
+    font-weight: 200;
+}
+
+.header h2 {
+    font-weight: 200;
+}
+
 /* ADMIN ==================================================================== */
+
 .form-container {
     max-width: 200px;
     margin-left: 14px;

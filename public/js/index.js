@@ -99,5 +99,5 @@ var data = [
 
 React.render(
   <NavBar data={data}/>,
-  document.getElementById('header')
+  document.getElementById('header-nav')
 );

@@ -40,6 +40,7 @@ function checkAuthorization (req, res, next) {
 
 // Public Routes ===============================================================
 server.use(express.static(__dirname + '/public/'));
+server.use("/images", express.static(__dirname + '/uploads/'));
 
 server.get('/',
   function (req, res) {
@@ -168,6 +169,12 @@ server.delete('/submissions/:submission/',
 ;
 
 // Submissions Files Routes ====================================================
+server.get('/submissions/:submission/all/',
+  function (req, res, next) {
+    return next();
+  }, routes.getSubmissionsFiles)
+;
+
 server.get('/submissions/:submission/:file/',
   function (req, res, next) {
     return next();

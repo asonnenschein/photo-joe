@@ -110,28 +110,39 @@ module.exports = function (db) {
         new db.Submissions(submissionsData).save()
           .then(function (submissions) {
 
-            var submissionsFileData = {
-              "submissions_id": submissions.id,
-              "size": req.files.file.size,
-              "directory": req.files.file.path,
-              "original_name": req.files.file.originalname,
-              "name": req.files.file.name,
-              "caption": req.body.caption,
-              "upload_ip": req.ip
-            };
+            function recursiveFileUpload (file) {
+              var submissionsFileData = {
+                "submissions_id": submissions.id,
+                "size": file.size,
+                "directory": file.path,
+                "original_name": file.originalname,
+                "name": file.name,
+                "caption": req.body.caption,
+                "upload_ip": req.ip
+              };
 
-            if (usersId) submissionsFileData.users_id = usersId;
+              if (usersId) submissionsFileData.users_id = usersId;
 
-            new db.SubmissionsFiles(submissionsFileData).save()
-              .then(function (file) {
-                file = file.toJSON();
-                file.submission = submissions.get('name');
-                return res.status(200).send(file);
-              })
-              .catch(function (error) {
-                return res.status(404).send("Could not upload file!");
-              })
-            ;
+              new db.SubmissionsFiles(submissionsFileData).save()
+                .then(function (file) {
+                  console.log(file);
+                  file = file.toJSON();
+                  file.submission = submissions.get('name');
+                  var nextFile = req.files.file.shift();
+                  if (nextFile) {
+                    recursiveFileUpload(nextFile);
+                  }
+                  else {
+                    return res.status(200).end();
+                  }
+                })
+                .catch(function (error) {
+                  return res.status(404).send("Could not upload file!");
+                })
+              ;
+            }
+
+            recursiveFileUpload(req.files.file.shift());
 
           })
           .catch(function (error) {
@@ -217,6 +228,21 @@ module.exports = function (db) {
           var submission = file.related('submission');
           if (submission.get('name') === req.params.submission) {
             return res.status(200).send(file);
+          }
+        })
+        .catch(function (error) {
+          return res.status(404).send("Could not get file!");
+        })
+      ;
+    },
+
+    getSubmissionsFiles: function (req, res, next) {
+      new db.SubmissionsFiles({ name: req.params.submission })
+        .fetchAll({ withRelated: ['submission'] })
+        .then(function (files) {
+          var submission = files.models[0].related('submission');
+          if (submission.get('name') === req.params.submission) {
+            return res.status(200).send(files.toJSON());
           }
         })
         .catch(function (error) {
@@ -320,20 +346,6 @@ module.exports = function (db) {
           return res.status(500).send("Internal server error!");
         })
       ;
-
-    },
-
-    // Tags Routes =============================================================
-
-    getTags: function (req, res, next) {
-
-    },
-
-    createTags: function (req, res, next) {
-
-    },
-
-    deleteTags: function (req, res, next) {
 
     },
 
