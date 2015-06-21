@@ -10,7 +10,14 @@ module.exports = function (db) {
       new db.Users({ username: req.params.username }).fetch()
         .then(function (data) {
           if (!data) return res.status(404).send("User does not exist!");
-          else return res.status(200).send(data);
+          var package = {
+            usersData: {
+              username: data.get('username'),
+              id: data.get('users_id')
+            }
+          };
+          console.log(JSON.stringify(package));
+          return res.render('user', JSON.stringify(package));
         })
         .catch(function (error) {
           return res.status(500).send("Internal server error!");

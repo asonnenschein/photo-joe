@@ -59,11 +59,33 @@ server.get('/about',
   })
 ;
 
+server.get('/login',
+  function (req, res) {
+    res.render('login');
+  })
+;
+
+server.get('/users/:username/',
+  checkAuthorization,
+  function (req, res, next) {
+    return next();
+  }, routes.getUser)
+;
+
+/*
+server.get('/users/:username/',
+  checkAuthorization,
+  function (req, res, next) {
+    return next();
+  }, routes.getUser)
+;
+*/
 // Login & Logout Routes =======================================================
 server.post('/users/login/',
   passport.authenticate('login'),
   function (req, res, next) {
-    res.status(200).send(req.user);
+    var username = req.user.get('username');
+    res.redirect('/users/' + username + '/');
   })
 ;
 
@@ -76,13 +98,8 @@ server.post('/users/logout/',
 ;
 
 // User Routes =================================================================
-server.get('/users/:username/',
-  function (req, res, next) {
-    return next();
-  }, routes.getUser)
-;
-
 server.get('/users/:username/submissions/',
+  checkAuthorization,
   function (req, res, next) {
     return next();
   }, routes.getUserSubmissions)

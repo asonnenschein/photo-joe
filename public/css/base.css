@@ -1,3 +1,11 @@
+/* BASE ===================================================================== */
+.content-container {
+    max-width: 975px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* INDEX ==================================================================== */
 .custom-wrapper {
     background-color: #ffd390;
     margin-bottom: 1em;
@@ -9,12 +17,6 @@
     -moz-transition: height 0.5s;
     -ms-transition: height 0.5s;
     transition: height 0.5s;
-}
-
-.content-container {
-    max-width: 975px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .custom-wrapper.open {
@@ -87,4 +89,10 @@
         display: block;
     }
 
+}
+
+/* ADMIN ==================================================================== */
+.form-container {
+    max-width: 200px;
+    margin-left: 14px;
 }
