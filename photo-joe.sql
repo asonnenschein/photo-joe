@@ -17,8 +17,8 @@ CREATE TABLE galleries (
     created_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE galleries_files (
-    galleries_files_id SERIAL PRIMARY KEY,
+CREATE TABLE galleries_images (
+    galleries_images_id SERIAL PRIMARY KEY,
     galleries_id INTEGER REFERENCES galleries(galleries_id)
         ON DELETE CASCADE,
     users_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE,
@@ -27,13 +27,15 @@ CREATE TABLE galleries_files (
     original_name VARCHAR,
     name VARCHAR,
     caption VARCHAR (5000),
+    cover_image BOOLEAN DEFAULT FALSE,
+    order_number INTEGER,
     upload_ip VARCHAR,
     uploaded_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 ALTER TABLE users OWNER TO photojoe_user;
 ALTER TABLE galleries OWNER TO photojoe_user;
-ALTER TABLE galleries_files OWNER TO photojoe_user;
+ALTER TABLE galleries_images OWNER TO photojoe_user;
 
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO photojoe_user;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO photojoe_user;

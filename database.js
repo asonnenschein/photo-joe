@@ -4,7 +4,7 @@ var bcrypt = require('bcrypt-nodejs')
   , bookshelf = require('bookshelf')(knex)
   , Users
   , Galleries
-  , GalleriesFiles
+  , GalleriesImages
 ;
 
 var save = bookshelf.Model.prototype.save;
@@ -24,7 +24,7 @@ Users = bookshelf.Model.extend({
     return bcrypt.compareSync(password, this.get('password'));
   },
   galleries: function () {
-    return this.hasMany(Submissions, 'submissions_id');
+    return this.hasMany(Submissions, 'galleries_id');
   }
 });
 
@@ -34,14 +34,14 @@ Galleries = bookshelf.Model.extend({
   user: function () {
     return this.belongsTo(Users, 'users_id');
   },
-  galleriesFiles: function () {
-    return this.hasMany(GalleriesFiles, 'galleries_files_id');
+  galleriesImages: function () {
+    return this.hasMany(GalleriesImages, 'galleries_images_id');
   }
 });
 
-GalleriesFiles = bookshelf.Model.extend({
-  tableName: 'galleries_files',
-  idAttribute: 'galleries_files_id',
+GalleriesImages = bookshelf.Model.extend({
+  tableName: 'galleries_images',
+  idAttribute: 'galleries_images_id',
   user: function () {
     return this.belongsTo(Users, 'users_id');
   },
@@ -53,5 +53,5 @@ GalleriesFiles = bookshelf.Model.extend({
 module.exports = {
   "Users": Users,
   "Galleries": Galleries,
-  "GalleriesFiles": GalleriesFiles,
+  "GalleriesImages": GalleriesImages,
 };

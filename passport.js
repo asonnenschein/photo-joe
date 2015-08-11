@@ -17,18 +17,7 @@ function authenticate (passport) {
 
         new db.Users(data).save()
           .then(function (user) {
-
-            var users_id = user.get('users_id');
-
-            new db.UsersPreferences({ users_id: users_id }).save()
-              .then(function (preferences) {
-                return callback(null, user);
-              })
-              .catch(function (error) {
-                return callback(error);
-              })
-            ;
-
+            return callback(null, user);
           })
           .catch(function (error) {
             return callback(error);

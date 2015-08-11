@@ -38,8 +38,9 @@ function checkAuthorization (req, res, next) {
 server.post('/admin/login/',
   passport.authenticate('login'),
   function (req, res, next) {
-    var username = req.user.get('username');
-    res.redirect('/users/' + username + '/');
+    res.status(200).end();
+//    var username = req.user.get('username');
+//    res.redirect('/users/' + username + '/');
   })
 ;
 

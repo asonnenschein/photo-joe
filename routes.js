@@ -16,17 +16,13 @@ module.exports = function (db) {
               id: data.get('users_id')
             }
           };
-          console.log(JSON.stringify(package));
-          return res.render('user', JSON.stringify(package));
+          return res.status(200).send(JSON.stringify(package));
+//          return res.render('user', JSON.stringify(package));
         })
         .catch(function (error) {
           return res.status(500).send("Internal server error!");
         })
       ;
-    },
-
-    getUserSubmissions: function (req, res, next) {
-
     },
 
     updateUser: function (req, res, next) {
@@ -54,27 +50,9 @@ module.exports = function (db) {
       ;
     },
 
-    deleteUser: function (req, res, next) {
-      new db.Users({ username: req.params.username }).fetch()
-        .then(function (data) {
-          data.destroy()
-            .then(function (success) {
-              return res.status(200).end();
-            })
-            .catch(function (error) {
-              return res.status(404).send("Could not delete user!");
-            })
-          ;
-        })
-        .catch(function (error) {
-          return res.status(500).send("Internal server error!");
-        })
-      ;
-    },
+    // Galleries Routes ========================================================
 
-    // Submissions Routes ======================================================
-
-    getSubmissions: function (req, res, next) {
+    getGalleries: function (req, res, next) {
       new db.Submissions().fetchAll()
         .then(function (submissions) {
           return res.status(200).send(submissions);
@@ -85,7 +63,7 @@ module.exports = function (db) {
       ;
     },
 
-    getSubmission: function (req, res, next) {
+    getGallery: function (req, res, next) {
       new db.Submissions({ name: req.params.submission }).fetch()
         .then(function (submission) {
           return res.status(200).send(submission);
@@ -96,7 +74,7 @@ module.exports = function (db) {
       ;
     },
 
-    createSubmission: function (req, res, next) {
+    createGallery: function (req, res, next) {
 
       function makeSubmission (usersId) {
         var submissionsData = {
@@ -125,7 +103,6 @@ module.exports = function (db) {
 
               new db.SubmissionsFiles(submissionsFileData).save()
                 .then(function (file) {
-                  console.log(file);
                   file = file.toJSON();
                   file.submission = submissions.get('name');
                   var nextFile = req.files.file.shift();
@@ -167,7 +144,7 @@ module.exports = function (db) {
 
     },
 
-    updateSubmission: function (req, res, next) {
+    updateGallery: function (req, res, next) {
       new db.Submissions({ name: req.params.submission }).fetch()
         .then(function (submission) {
 
@@ -196,7 +173,7 @@ module.exports = function (db) {
       ;
     },
 
-    deleteSubmission: function (req, res, next) {
+    deleteGallery: function (req, res, next) {
       new db.Submissions({ name: req.params.submission }).fetch()
         .then(function (submission) {
           if (submission.get('users_id') === req.user.id) {
@@ -220,8 +197,9 @@ module.exports = function (db) {
       ;
     },
 
-    // Submissions Files Routes ================================================
-    getSubmissionsFile: function (req, res, next) {
+    // Galleries Images Routes =================================================
+
+    getGalleriesImages: function (req, res, next) {
       new db.SubmissionsFiles({ name: req.params.file })
         .fetch({ withRelated: ['submission'] })
         .then(function (file) {
@@ -236,7 +214,7 @@ module.exports = function (db) {
       ;
     },
 
-    getSubmissionsFiles: function (req, res, next) {
+    getGalleriesImage: function (req, res, next) {
       new db.SubmissionsFiles({ name: req.params.submission })
         .fetchAll({ withRelated: ['submission'] })
         .then(function (files) {
@@ -251,7 +229,7 @@ module.exports = function (db) {
       ;
     },
 
-    createSubmissionsFile: function (req, res, next) {
+    createGalleriesImage: function (req, res, next) {
       new db.Submissions({ name: req.params.submission }).fetch()
         .then(function (submissions) {
           if (submissions.get('users_id') === req.user.id) {
@@ -286,7 +264,7 @@ module.exports = function (db) {
       ;
     },
 
-    updateSubmissionsFile: function (req, res, next) {
+    updateGalleriesImage: function (req, res, next) {
       new db.SubmissionsFiles({ name: req.params.file })
         .fetch({ withRelated: ['submission'] })
         .then(function (file) {
@@ -317,7 +295,7 @@ module.exports = function (db) {
       ;
     },
 
-    deleteSubmissionsFile: function (req, res, next) {
+    deleteGalleriesImage: function (req, res, next) {
       new db.SubmissionsFiles({ name: req.params.file })
         .fetch({ withRelated: ['submission'] })
         .then(function (file) {
