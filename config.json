@@ -5,9 +5,9 @@
     "client": "postgres",
     "connection": {
       "host": "127.0.0.1",
-      "user": "slippyimages_user",
+      "user": "photojoe_user",
       "password": "password",
-      "database": "slippyimages_db",
+      "database": "photojoe_db",
       "charset": "utf8"
     }
   }

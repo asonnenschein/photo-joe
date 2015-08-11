@@ -1,5 +1,4 @@
 var express = require('express')
-  , handlebars = require('express-handlebars')
   , cookieParser = require('cookie-parser')
   , session = require('express-session')
   , bodyParser = require('body-parser')
@@ -30,59 +29,13 @@ server.use(passport.session());
 
 server.enable('trust proxy');
 
-server.engine('handlebars', handlebars({ defaultLayout: 'index' }));
-server.set('view engine', 'handlebars');
-
 function checkAuthorization (req, res, next) {
   if (req.isAuthenticated && req.user.id) return next();
   else res.status(401).send("Unauthorized request!");
 }
 
-// Public Routes ===============================================================
-server.use(express.static(__dirname + '/public/'));
-server.use("/images", express.static(__dirname + '/uploads/'));
-
-server.get('/',
-  function (req, res) {
-    res.render('home');
-  })
-;
-
-server.get('/galleries',
-  function (req, res) {
-    res.render('galleries');
-  })
-;
-
-server.get('/about',
-  function (req, res) {
-    res.render('about');
-  })
-;
-
-server.get('/login',
-  function (req, res) {
-    res.render('login');
-  })
-;
-
-server.get('/users/:username/',
-  checkAuthorization,
-  function (req, res, next) {
-    return next();
-  }, routes.getUser)
-;
-
-/*
-server.get('/users/:username/',
-  checkAuthorization,
-  function (req, res, next) {
-    return next();
-  }, routes.getUser)
-;
-*/
-// Login & Logout Routes =======================================================
-server.post('/users/login/',
+// Register, Login & Logout Routes =============================================
+server.post('/admin/login/',
   passport.authenticate('login'),
   function (req, res, next) {
     var username = req.user.get('username');
@@ -90,7 +43,7 @@ server.post('/users/login/',
   })
 ;
 
-server.post('/users/logout/',
+server.post('/admin/logout/',
   checkAuthorization,
   function (req, res, next) {
     req.logout();
@@ -98,19 +51,19 @@ server.post('/users/logout/',
   })
 ;
 
-// User Routes =================================================================
-server.get('/users/:username/submissions/',
-  checkAuthorization,
-  function (req, res, next) {
-    return next();
-  }, routes.getUserSubmissions)
-;
-
-server.post('/users/',
+server.post('/admin/register/',
   passport.authenticate('register'),
   function (req, res, next) {
     res.status(201).send(req.user);
   })
+;
+
+// User Routes =================================================================
+server.get('/users/:username/',
+  checkAuthorization,
+  function (req, res, next) {
+    return next();
+  }, routes.getUser)
 ;
 
 server.put('/users/:username/',
@@ -120,27 +73,20 @@ server.put('/users/:username/',
   }, routes.updateUser)
 ;
 
-server.delete('/users/:username/',
-  checkAuthorization,
+// Galleries Routes ============================================================
+server.get('/galleries/',
   function (req, res, next) {
     return next();
-  }, routes.deleteUser)
+  }, routes.getGalleries)
 ;
 
-// Submissions Routes ==========================================================
-server.get('/submissions/',
+server.get('/galleries/:gallery/',
   function (req, res, next) {
     return next();
-  }, routes.getSubmissions)
+  }, routes.getGallery)
 ;
 
-server.get('/submissions/:submission/',
-  function (req, res, next) {
-    return next();
-  }, routes.getSubmission)
-;
-
-server.post('/submissions/',
+server.post('/galleries/',
   multer({
     dest: config.uploads,
     onFileUploadStart: function (file, req, res) {
@@ -151,37 +97,37 @@ server.post('/submissions/',
   }),
   function (req, res, next) {
     return next();
-  }, routes.createSubmission)
+  }, routes.createGallery)
 ;
 
-server.put('/submissions/:submission/',
+server.put('/galleries/:gallery/',
   checkAuthorization,
   function (req, res, next) {
     return next();
-  }, routes.updateSubmission)
+  }, routes.updateGallery)
 ;
 
-server.delete('/submissions/:submission/',
+server.delete('/galleries/:gallery/',
   checkAuthorization,
   function (req, res, next) {
     return next();
-  }, routes.deleteSubmission)
+  }, routes.deleteGallery)
 ;
 
-// Submissions Files Routes ====================================================
-server.get('/submissions/:submission/all/',
+// Galleries Images Routes =====================================================
+server.get('/galleries/:gallery/images/',
   function (req, res, next) {
     return next();
-  }, routes.getSubmissionsFiles)
+  }, routes.getGalleriesImages)
 ;
 
-server.get('/submissions/:submission/:file/',
+server.get('/galleries/:gallery/images/:image/',
   function (req, res, next) {
     return next();
-  }, routes.getSubmissionsFile)
+  }, routes.getGalleriesImage)
 ;
 
-server.post('/submissions/:submission/',
+server.post('/galleries/:gallery/images/',
   checkAuthorization,
   multer({
     dest: config.uploads,
@@ -193,21 +139,32 @@ server.post('/submissions/:submission/',
   }),
   function (req, res, next) {
     return next();
-  }, routes.createSubmissionsFile)
+  }, routes.createGalleriesImage)
 ;
 
-server.put('/submissions/:submission/:file/',
+server.put('/galleries/:gallery/images/:image/',
   checkAuthorization,
   function (req, res, next) {
     return next();
-  }, routes.updateSubmissionsFile)
+  }, routes.updateGalleriesImage)
 ;
 
-server.delete('/submissions/:submission/:file/',
+server.delete('/galleries/:gallery/images/:image/',
   checkAuthorization,
   function (req, res, next) {
     return next();
-  }, routes.deleteSubmissionsFile)
+  }, routes.deleteGalleriesImage)
 ;
 
-module.exports = function (callback) { callback(server); };
+// Public Routes ===============================================================
+server.use(express.static(__dirname + '/public/'));
+server.use("/images", express.static(__dirname + '/uploads/'));
+server.use("/thumbnails", express.static(__dirname + '/thumbnails/'));
+
+server.get('/*', function (req, res) {
+  res.sendFile(__dirname + '/public/dist/index.html');
+});
+
+module.exports = function (callback) {
+  callback(server);
+};

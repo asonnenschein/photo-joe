@@ -18,8 +18,3 @@ var About = React.createClass({
     );
   }
 });
-
-React.render(
-  <About />,
-  document.getElementById("content")
-);

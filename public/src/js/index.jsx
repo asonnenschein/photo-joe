@@ -18,7 +18,7 @@ var NavBarItem = React.createClass({
 
 var NavBar = React.createClass({
   getInitialState: function () {
-    return {windowWidth: window.innerWidth};
+    return {};
   },
   toggleHorizontal: function () {
     [].forEach.call(
@@ -50,9 +50,11 @@ var NavBar = React.createClass({
     var self = this
       , toggle = React.findDOMNode(this.refs.toggle)
     ;
+
     toggle.addEventListener('click', function (e) {
       self.toggleMenu();
     });
+
     window.addEventListener('resize', this.closeMenu);
   },
   componentWillUnmount: function() {
@@ -62,14 +64,17 @@ var NavBar = React.createClass({
     return <NavBarItem text={item.text} url={item.url} />
   },
   render: function () {
-    var items = this.props.data.map(this.generateItem);
+    var items = [
+      {"text": "About", "url": "/about"},
+      {"text": "Galleries", "url": "/galleries"}
+    ].map(this.generateItem);
     return (
-      <div className="custom-wrapper" ref="headerNav">
+      <div className="navigation-wrapper" ref="headerNav">
         <div className="content-container pure-g">
           <div className="pure-u-1 pure-u-md-1-2">
             <div className="pure-menu">
-              <a href="#" className="pure-menu-heading custom-brand">
-                Joseph Sonnenschein Photography
+              <a href="/" className="pure-menu-heading custom-brand">
+                Josef Sonnenschein
               </a>
               <a href="#" className="custom-toggle" ref="toggle">
                 <s className="bar"></s>
@@ -91,13 +96,40 @@ var NavBar = React.createClass({
   }
 });
 
-var data = [
-  {"text": "Home", "url": "/"},
-  {"text": "Galleries", "url": "/galleries"},
-  {"text": "About", "url": "/about"},
-];
+var App = React.createClass({
+  render: function () {
+    var Child;
+    switch (this.props.route) {
+      case '':
+        Child = Home;
+        break;
+      case 'home':
+        Child = Home;
+        break;
+      case 'about':
+        Child = About;
+        break;
+      default:
+        Child = Home;
+    }
 
-React.render(
-  <NavBar data={data}/>,
-  document.getElementById('header-nav')
-);
+    return (
+      <div>
+          <nav>
+            <NavBar />
+          </nav>
+          <div className="content-wrapper">
+            <Child />
+          </div>
+      </div>
+    )
+  }
+});
+
+function render () {
+  var route = window.location.pathname.split('/').filter(Boolean)[0];
+  React.render(<App route={route} />, document.body);
+}
+
+window.addEventListener('hashchange', render);
+render();
