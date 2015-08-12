@@ -53,117 +53,96 @@ module.exports = function (db) {
     // Galleries Routes ========================================================
 
     getGalleries: function (req, res, next) {
-      new db.Submissions().fetchAll()
-        .then(function (submissions) {
-          return res.status(200).send(submissions);
+      new db.Galleries().fetchAll()
+        .then(function (galleries) {
+          return res.status(200).send(galleries);
         })
         .catch(function (error) {
-          return res.status(404).send("Could not get submissions!");
+          return res.status(404).send("Could not get galleries!");
         })
       ;
     },
 
     getGallery: function (req, res, next) {
-      new db.Submissions({ name: req.params.submission }).fetch()
-        .then(function (submission) {
-          return res.status(200).send(submission);
+      new db.Galleries({ name: req.params.gallery }).fetch()
+        .then(function (gallery) {
+          return res.status(200).send(gallery);
         })
         .catch(function (error) {
-          return res.status(404).send("Could not get submission!");
+          return res.status(404).send("Could not get gallery!");
         })
       ;
     },
 
     createGallery: function (req, res, next) {
+      new db.Users({ users_id: req.user.id }).fetch()
+        .then(function (users) {
 
-      function makeSubmission (usersId) {
-        var submissionsData = {
-          "title": req.body.title,
-          "anonymous": req.body.anonymous,
-          "private": req.body.private,
-        };
+          var galleriesData = {
+            "users_id": users.id,
+            "title": req.body.title,
+            "description": req.body.description
+          };
 
-        if (usersId) submissionsData.users_id = usersId;
+          new db.Galleries(galleriesData).save()
+            .then(function (gallery) {
 
-        new db.Submissions(submissionsData).save()
-          .then(function (submissions) {
-
-            function recursiveFileUpload (file) {
-              var submissionsFileData = {
-                "submissions_id": submissions.id,
-                "size": file.size,
-                "directory": file.path,
-                "original_name": file.originalname,
-                "name": file.name,
+              var imagesData = {
+                "galleries_id": gallery.id,
+                "users_id": users.id,
+                "size": req.files.file.size,
+                "directory": req.files.file.path,
+                "original_name": req.files.file.originalname,
+                "name": req.files.file.name,
                 "caption": req.body.caption,
-                "upload_ip": req.ip
+                "upload_ip": req.ip,
+                "order_number": req.body.order_number,
+                "cover_image": req.body.cover_image
               };
 
-              if (usersId) submissionsFileData.users_id = usersId;
-
-              new db.SubmissionsFiles(submissionsFileData).save()
-                .then(function (file) {
-                  file = file.toJSON();
-                  file.submission = submissions.get('name');
-                  var nextFile = req.files.file.shift();
-                  if (nextFile) {
-                    recursiveFileUpload(nextFile);
-                  }
-                  else {
-                    return res.status(200).end();
-                  }
+              new db.GalleriesImages(imagesData).save()
+                .then(function (image) {
+                  return res.status(200).end();
                 })
                 .catch(function (error) {
-                  return res.status(404).send("Could not upload file!");
+                  res.status(404).send("Could not upload image!");
                 })
               ;
-            }
 
-            recursiveFileUpload(req.files.file.shift());
+            })
+            .catch(function (error) {
+              console.log(error);
+              return res.status(404).send("Could not create gallery!");
+            })
+          ;
 
-          })
-          .catch(function (error) {
-            return res.status(404).send("Could not upload file!");
-          })
-        ;
-      }
-
-      if (req.body.anonymous === 'true') {
-        makeSubmission();
-      }
-      else {
-        new db.Users({ users_id: req.user.id }).fetch()
-          .then(function (users) {
-            makeSubmission(users.id);
-          })
-          .catch(function (error) {
-            return res.status(404).send("Could not upload file!");
-          })
-        ;
-      }
-
+        })
+        .catch(function (error) {
+          return res.status(404).send("User not authorized to upload file!");
+        })
+      ;
     },
 
     updateGallery: function (req, res, next) {
-      new db.Submissions({ name: req.params.submission }).fetch()
-        .then(function (submission) {
+      new db.Galleries({ name: req.params.gallery }).fetch()
+        .then(function (gallery) {
 
-          if (!submission)
-            return res.status(400).send("Could not update submission!");
+          if (!gallery)
+            return res.status(400).send("Could not update gallery!");
 
-          if (submission.get('users_id') === req.user.id) {
-            submission.save(req.body, { method: 'update' })
+          if (gallery.get('users_id') === req.user.id) {
+            gallery.save(req.body, { method: 'update' })
               .then(function (update) {
                 return res.status(200).send(update);
               })
               .catch(function (error) {
-                return res.status(400).send("Could not update submission!");
+                return res.status(400).send("Could not update gallery!");
               })
             ;
           }
           else {
             return res.status(500)
-              .send("User not authorized to update submission!");
+              .send("User not authorized to update gallery!");
           }
 
         })
@@ -174,25 +153,25 @@ module.exports = function (db) {
     },
 
     deleteGallery: function (req, res, next) {
-      new db.Submissions({ name: req.params.submission }).fetch()
-        .then(function (submission) {
-          if (submission.get('users_id') === req.user.id) {
-            submission.destroy()
+      new db.Galleries({ name: req.params.gallery }).fetch()
+        .then(function (gallery) {
+          if (gallery.get('users_id') === req.user.id) {
+            gallery.destroy()
               .then(function (success) {
                 return res.status(200).end();
               })
               .catch(function (error) {
-                return res.status(404).send("Could not delete submission!");
+                return res.status(404).send("Could not delete gallery!");
               })
             ;
           }
           else {
             return res.status(500)
-              .send("User not authorized to delete submission!");
+              .send("User not authorized to delete gallery!");
           }
         })
         .catch(function (error) {
-          return res.status(500).send("Could not delete submission!");
+          return res.status(500).send("Could not delete gallery!");
         })
       ;
     },

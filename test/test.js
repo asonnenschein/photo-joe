@@ -51,7 +51,7 @@ describe('SlippyNode Image Server REST API Tests', function () {
     it('GET a single user', function (done) {
       agent.get('/users/testuser/').expect(200, done);
     });
-/*
+
     it('POST logout of an existing user account', function (done) {
       var request = {
         "username": "testuser",
@@ -78,29 +78,18 @@ describe('SlippyNode Image Server REST API Tests', function () {
       };
       agent.put('/users/testuser/').send(request).expect(200, done);
     });
-*/
+
   });
-/*
+
   describe('GALLERIES Tests', function () {
 
     var gallery;
-
-    it('POST login to an existing user account', function (done) {
-      var request = {
-        "username": "testuser",
-        "email": "testuser@test.com",
-        "password": "secret"
-      };
-      agent.post('/admin/login/').send(request).expect(200, done);
-    });
 
     it('POST upload a new user gallery', function (done) {
       agent
         .post('/galleries/')
         .field('title', 'This is a title')
-        .field('caption', 'This is a picture of a cute dog.')
-        .field('private', 'false')
-        .field('anonymous', 'false')
+        .field('description', 'This is a picture of a cute dog.')
         .attach('file', './test/cutedog.jpg')
         .expect(200, done)
       ;
@@ -127,7 +116,7 @@ describe('SlippyNode Image Server REST API Tests', function () {
       agent
         .put('/galleries/' + gallery + '/')
         .field('title', 'This is an updated title')
-        .field('caption', 'This is an updated picture of a cute dog.')
+        .field('description', 'This is an updated picture of a cute dog.')
         .expect(200, done)
       ;
     });
@@ -141,7 +130,7 @@ describe('SlippyNode Image Server REST API Tests', function () {
   describe('GALLERIES IMAGES Tests', function () {
 
     var gallery, image;
-
+/*
     it('POST login to an existing user account', function (done) {
       var request = {
         "username": "testuser",
@@ -217,7 +206,7 @@ describe('SlippyNode Image Server REST API Tests', function () {
     it('DELETE a submission', function (done) {
       agent.delete('/galleries/' + gallery + '/').expect(200, done);
     });
-
-  });
 */
+  });
+
 });
